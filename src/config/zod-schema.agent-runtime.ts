@@ -706,6 +706,17 @@ export const AgentEntrySchema = z
   })
   .strict();
 
+export const SwarmToolsSchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    maxConcurrent: z.number().int().positive().optional(),
+    defaultRunner: z.enum(["claude-code", "codex", "gemini"]).optional(),
+    maxRetries: z.number().int().nonnegative().optional(),
+    repoRoot: z.string().optional(),
+  })
+  .strict()
+  .optional();
+
 export const ToolsSchema = z
   .object({
     ...CommonToolPolicyFields,
@@ -762,6 +773,7 @@ export const ToolsSchema = z
       .optional(),
     exec: ToolExecSchema,
     fs: ToolFsSchema,
+    swarm: SwarmToolsSchema,
     subagents: z
       .object({
         tools: ToolPolicySchema,

@@ -417,6 +417,19 @@ export type MemorySearchConfig = {
   };
 };
 
+export type SwarmToolsConfig = {
+  /** Enable the swarm tool for external coding agent orchestration. */
+  enabled?: boolean;
+  /** Max concurrent swarm agents (default: 5). */
+  maxConcurrent?: number;
+  /** Default runner: "claude-code", "codex", or "gemini" (default: "claude-code"). */
+  defaultRunner?: "claude-code" | "codex" | "gemini";
+  /** Max auto-respawn retries for failed agents (default: 3). */
+  maxRetries?: number;
+  /** Default repo root for worktree creation. */
+  repoRoot?: string;
+};
+
 export type ToolsConfig = {
   /** Base tool profile applied before allow/deny lists. */
   profile?: ToolProfileId;
@@ -571,6 +584,8 @@ export type ToolsConfig = {
   fs?: FsToolsConfig;
   /** Runtime loop detection for repetitive/ stuck tool-call patterns. */
   loopDetection?: ToolLoopDetectionConfig;
+  /** External coding agent swarm orchestration. */
+  swarm?: SwarmToolsConfig;
   /** Sub-agent tool policy defaults (deny wins). */
   subagents?: {
     /** Default model selection for spawned sub-agents (string or {primary,fallbacks}). */

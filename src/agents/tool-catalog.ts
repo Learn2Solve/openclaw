@@ -233,6 +233,14 @@ const CORE_TOOL_DEFINITIONS: CoreToolDefinition[] = [
     profiles: [],
     includeInOpenClawGroup: true,
   },
+  {
+    id: "swarm",
+    label: "swarm",
+    description: "External coding agent orchestration",
+    sectionId: "automation",
+    profiles: [],
+    includeInOpenClawGroup: true,
+  },
 ];
 
 const CORE_TOOL_BY_ID = new Map<string, CoreToolDefinition>(
