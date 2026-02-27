@@ -243,13 +243,18 @@ export function buildEmbeddedRunPayloads(params: {
     }
     return isRawApiErrorPayload(trimmed);
   };
-  const answerTexts = (
-    params.assistantTexts.length
-      ? params.assistantTexts
-      : fallbackAnswerText
-        ? [fallbackAnswerText]
-        : []
-  ).filter((text) => !shouldSuppressRawErrorText(text));
+  // When the agent already delivered its reply via the message tool,
+  // any remaining assistant text blocks are internal narration (e.g.
+  // "回复了他..." / "I replied with...") and should not be sent to the
+  // channel as a second visible message.
+  const answerTexts = params.didSendViaMessagingTool
+    ? []
+    : (params.assistantTexts.length
+        ? params.assistantTexts
+        : fallbackAnswerText
+          ? [fallbackAnswerText]
+          : []
+      ).filter((text) => !shouldSuppressRawErrorText(text));
 
   let hasUserFacingAssistantReply = false;
   for (const text of answerTexts) {
