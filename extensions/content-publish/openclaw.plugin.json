@@ -1,0 +1,77 @@
+{
+  "id": "content-publish",
+  "name": "Content Publish",
+  "description": "Draft and publish content to Twitter/X, Substack, WeChat, and Xiaohongshu.",
+  "providers": ["twitter"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "twitter": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "clientId": { "type": "string" },
+          "clientSecret": { "type": "string" }
+        },
+        "required": ["clientId", "clientSecret"]
+      },
+      "wechat": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "appId": { "type": "string" },
+          "appSecret": { "type": "string" },
+          "author": { "type": "string" }
+        },
+        "required": ["appId", "appSecret"]
+      },
+      "substack": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "publicationUrl": { "type": "string" }
+        }
+      },
+      "defaultPlatform": {
+        "type": "string",
+        "enum": ["twitter", "substack", "wechat", "xiaohongshu"],
+        "default": "twitter"
+      }
+    }
+  },
+  "uiHints": {
+    "twitter.clientId": {
+      "label": "Twitter/X Client ID",
+      "placeholder": "Your X OAuth 2.0 Client ID"
+    },
+    "twitter.clientSecret": {
+      "label": "Twitter/X Client Secret",
+      "sensitive": true,
+      "placeholder": "Your X OAuth 2.0 Client Secret"
+    },
+    "wechat.appId": {
+      "label": "WeChat Official Account App ID",
+      "placeholder": "wxXXXXXXXXXXXXXX"
+    },
+    "wechat.appSecret": {
+      "label": "WeChat Official Account App Secret",
+      "sensitive": true,
+      "placeholder": "Your WeChat App Secret"
+    },
+    "wechat.author": {
+      "label": "Default Author Name",
+      "placeholder": "Author name for articles",
+      "advanced": true
+    },
+    "substack.publicationUrl": {
+      "label": "Substack Publication URL",
+      "placeholder": "https://yourname.substack.com",
+      "advanced": true
+    },
+    "defaultPlatform": {
+      "label": "Default Platform",
+      "help": "Platform to target when none is specified"
+    }
+  }
+}
