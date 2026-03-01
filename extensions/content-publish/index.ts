@@ -86,7 +86,32 @@ const contentPublishPlugin = {
   description: "Draft and publish content to Twitter/X, Substack, WeChat, and Xiaohongshu",
 
   register(api: OpenClawPluginApi) {
-    const config = api.pluginConfig as unknown as ContentPublishConfig;
+    const rawConfig = api.pluginConfig as unknown as ContentPublishConfig;
+    // Merge environment variables as fallbacks for sensitive credentials
+    const config: ContentPublishConfig = {
+      ...rawConfig,
+      wechat:
+        rawConfig?.wechat ??
+        (process.env.WECHAT_APP_ID && process.env.WECHAT_APP_SECRET
+          ? {
+              appId: process.env.WECHAT_APP_ID,
+              appSecret: process.env.WECHAT_APP_SECRET,
+              author: process.env.WECHAT_AUTHOR,
+            }
+          : undefined),
+      twitter:
+        rawConfig?.twitter ??
+        (process.env.TWITTER_CLIENT_ID && process.env.TWITTER_CLIENT_SECRET
+          ? {
+              clientId: process.env.TWITTER_CLIENT_ID,
+              clientSecret: process.env.TWITTER_CLIENT_SECRET,
+            }
+          : undefined),
+      defaultPlatform:
+        rawConfig?.defaultPlatform ??
+        (process.env.CONTENT_PUBLISH_DEFAULT_PLATFORM as ContentPublishConfig["defaultPlatform"]) ??
+        undefined,
+    };
     const store = getAuthStore(api);
     const hasTwitter = !!(config?.twitter?.clientId && config?.twitter?.clientSecret);
 
