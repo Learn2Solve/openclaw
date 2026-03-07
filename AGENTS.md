@@ -47,7 +47,9 @@
 - Update: `sudo npm i -g openclaw@latest` (global install needs root on `/usr/lib/node_modules`).
 - Config: use `openclaw config set ...`; ensure `gateway.mode=local` is set.
 - Discord: store raw token only (no `DISCORD_BOT_TOKEN=` prefix).
-- Restart: stop old gateway and run:
+- Restart: prefer `openclaw gateway restart` (or the platform service `restart` action) after validation checks pass.
+- Do not use kill+start or stop+start quick sequences unless the operator explicitly approves a manual fallback.
+- Manual fallback (explicit approval only):
   `pkill -9 -f openclaw-gateway || true; nohup openclaw gateway run --bind loopback --port 18789 --force > /tmp/openclaw-gateway.log 2>&1 &`
 - Verify: `openclaw channels status --probe`, `ss -ltnp | rg 18789`, `tail -n 120 /tmp/openclaw-gateway.log`.
 
@@ -156,6 +158,33 @@
 ## Troubleshooting
 
 - Rebrand/migration issues or legacy config/service warnings: run `openclaw doctor` (see `docs/gateway/doctor.md`).
+
+## User-Mandated Operational Iron Rules
+
+- `openclaw.json` 3-step rule:
+  - Before edit: create a timestamped backup.
+  - Before edit: verify field names/allowed values against docs/schema (no guessing).
+  - After edit: run dual validation (`JSON parse` + `openclaw doctor`) and only restart after both pass.
+- Restart safety:
+  - Do not kill a foreground gateway and then start a service as a routine path.
+  - Do not use stop+start quick chaining as the default path.
+  - Prefer a single `restart` action after validation passes.
+- No guessing commands/config:
+  - If unsure, check docs or `--help` first.
+  - Config keys/values must be schema-backed.
+- Confirmation discipline:
+  - After presenting options, wait for explicit user confirmation before executing a chosen plan.
+- Secret safety:
+  - Never print real secrets in output.
+  - Retrieve secrets via 1Password `op`.
+  - Use placeholders only in examples.
+- 1Password + SSH hard rules:
+  - Run all `op` operations inside tmux.
+  - Private keys may only be loaded into `ssh-agent`; do not write keys to disk.
+  - SSH connections that depend on secrets must source keys via 1Password workflows.
+- Code and production change flow:
+  - Local change -> tests -> commit -> user confirmation -> push/deploy.
+  - Do not patch core code directly on production servers.
 
 ## Agent-Specific Notes
 
