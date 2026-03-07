@@ -1,0 +1,28 @@
+{
+  "id": "whoop-health",
+  "providers": ["whoop"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "clientId": {
+        "type": "string"
+      },
+      "clientSecret": {
+        "type": "string"
+      }
+    },
+    "required": ["clientId", "clientSecret"]
+  },
+  "uiHints": {
+    "clientId": {
+      "label": "Whoop Client ID",
+      "placeholder": "Your Whoop OAuth Client ID"
+    },
+    "clientSecret": {
+      "label": "Whoop Client Secret",
+      "sensitive": true,
+      "placeholder": "Your Whoop OAuth Client Secret"
+    }
+  }
+}
